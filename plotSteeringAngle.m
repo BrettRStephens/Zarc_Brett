@@ -62,23 +62,18 @@ for j = 3:length(files)
     %threshold = 0.03;
     %res = 150; 
     threshold = 0.17;
-    res = 10;
+    horizon = 20;
+    indeces = [];
     
-    for i = (res+1):length(dxB_f)
+    for i = (horizon+1):length(dxB_f)
         %find when v_x stops changing
-        if dxB_f(i) > 0.74 && (abs(dxB_f(i) - dxB_f(i-res))) < threshold
+        if dxB_f(i) > 0.7 && (abs(dxB_f(i) - dxB_f(i-horizon))) < threshold
             index_start = i; %starting index
-            for k = index_start:length(dxB_f)
-                if abs(dxB_f(k)-dxB_f(index_start)) > 0.05
-                    index_end = k; %ending index
-                    flag = 1;
-                    break
+            for k = index_start:length(dxB_f)-1
+                if abs(dxB_f(k+1)-dxB_f(k)) < 0.2
+                    indeces = [indeces,k];
                 end
             end
-        end
-        
-        if(flag == 1)
-            break
         end
     end
     
