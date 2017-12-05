@@ -7,6 +7,8 @@ folder = dir();
 folder = folder(4:6);
 
 delta = zeros(3,10);
+v_x_avgs = zeros(3,10);
+yaw_f_avgs = zeros(3,10);
 
 %parse each folder
 for m = 1:length(folder)
@@ -38,7 +40,7 @@ files = dir(str_folder);
         Q = [qw qx qy qz];
 
         eulerAngles = quat2eul(Q);
-        head = eulerAngles(:,1); %heading angle [rad]
+        head = unwrap(eulerAngles(:,1)); %heading angle [rad]
 
         dxW = zeros(N-1,1);
         dyW = zeros(N-1,1);
@@ -97,12 +99,14 @@ files = dir(str_folder);
 %         subplot(2,1,2)
 %         plot(t(1:end-1), yaw_f);hold on;
 %         %plot(t_const,yaw_f_in,'LineWidth',2);
-%         %plot(t(1:end-1), yaw_f_avg_array,'LineWidth',2);
+%         plot(t(1:end-1), yaw_f_avg_array,'LineWidth',2);
 
-        %steering angle calc
+        %steering angle calc for each file
         Lf = 0.1698;
         Lr = 0.1542;
         delta(m,j) = atan((yaw_f_avg*(Lf+Lr))/(v_x_avg));
+        v_x_avgs(m,j) = v_x_avg;
+        yaw_f_avgs(m,j) = yaw_f_avg;
     end
 
 end
@@ -118,8 +122,22 @@ pwm_90_93 = delta(3,:);
 pwm_90_93 = pwm_90_93(pwm_90_93~=0);
 pwm_90_93_x = [90,93];
 
+%bring data together
+pwm_data_x = [pos_pwm_x,neg_pwm_x,pwm_90_93_x];
+pwm_data_y = [pos_pwm,neg_pwm,pwm_90_93];
+
 figure()
 plot(pos_pwm_x,pos_pwm,'b*');hold on;
 plot(neg_pwm_x,neg_pwm,'r*');
 plot(pwm_90_93_x,pwm_90_93,'g*');
+xlabel('uPWM');ylabel('delta');
+
+%fit a line to the data
+P = polyfit(pwm_data_x,pwm_data_y,1);
+yfit = P(1)*pwm_data_x+P(2);
+plot(pwm_data_x,yfit,'r-');
+text(90,0.1,strcat('delta = ',num2str(P(1)),' * uPWM',' + ',num2str(P(2))));
+
+
+
 
