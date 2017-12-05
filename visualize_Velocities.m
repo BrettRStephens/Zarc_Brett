@@ -3,8 +3,8 @@ close;
 clear;
 
 %cd /Users/BrettStephens/Documents/Zarc_Brett;
-str_folder = '/Users/BrettStephens/Documents/Zarc_Brett/Encoder,IMU Measurements/Negative PWM, (inc3, start 87)/';
-str_file = 'encOutput_23-11-2017 01:54:53.csv';
+str_folder = '/Users/BrettStephens/Documents/Zarc_Brett/Encoder,IMU Measurements/PWM_90,93/';
+str_file = 'encOutput_23-11-2017 02:07:09.csv';
 str = strcat(str_folder,str_file);
 data = csvread(str,1);
 file = fopen(str,'r');

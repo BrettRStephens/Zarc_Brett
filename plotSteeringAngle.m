@@ -90,16 +90,16 @@ files = dir(str_folder);
         yaw_f_avg = mean(yaw_f(indeces));
         yaw_f_avg_array = yaw_f_avg*ones(1,length(t(1:end-1)));
 
-%         figure();
-%         subplot(2,1,1);
-%         plot(t(1:end-1), dxB_f);hold on;
-%         plot(t_const,v_x,'LineWidth',2);
-%         plot(t(1:end-1), v_x_avg_array,'LineWidth',2);
-%         
-%         subplot(2,1,2)
-%         plot(t(1:end-1), yaw_f);hold on;
-%         %plot(t_const,yaw_f_in,'LineWidth',2);
-%         plot(t(1:end-1), yaw_f_avg_array,'LineWidth',2);
+        figure();
+        subplot(2,1,1);
+        plot(t(1:end-1), dxB_f);hold on;
+        plot(t_const,v_x,'LineWidth',2);
+        plot(t(1:end-1), v_x_avg_array,'LineWidth',2);
+        
+        subplot(2,1,2)
+        plot(t(1:end-1), yaw_f);hold on;
+        %plot(t_const,yaw_f_in,'LineWidth',2);
+        plot(t(1:end-1), yaw_f_avg_array,'LineWidth',2);
 
         %steering angle calc for each file
         Lf = 0.1698;

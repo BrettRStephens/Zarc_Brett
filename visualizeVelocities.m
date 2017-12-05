@@ -1,14 +1,14 @@
 %vextract velocities
 
-str_folder = '/Users/BrettStephens/Documents/Zarc_Brett/VICON Measurements/negative PWM (inc3, start 87)/';
-str_file_1 = 'viconExampleOutput_23-11-2017 02:54:53.csv'; %heading ok
-str_file = 'viconExampleOutput_23-11-2017 02:59:55.csv'; %heading wierd 
+str_folder = '/Users/BrettStephens/Documents/Zarc_Brett/VICON Measurements/pwm_90,93/';
+str_file = 'viconExampleOutput_23-11-2017 03:07:06.csv'; %heading ok
+%str_file = 'viconExampleOutput_23-11-2017 02:59:55.csv'; %heading wierd 
 
-str_file = [str_file_1;str_file_2];
+%str_file = [str_file_1;str_file_2];
 
-for j = 1:length(str_file(:,1))
+for j = 1:1%length(str_file(:,1))
     
-    str = strcat(str_folder,str_file(j,:));
+    str = strcat(str_folder,str_file);%(j,:));
     data = csvread(str,1);
     file = fopen(str,'r');
     header = fgets(file);
