@@ -100,6 +100,6 @@ subplot(2,1,2);
 plot(time, velFL,'Linewidth', 2);hold on;
 plot(time, velFR,'Linewidth', 2)
 plot(t(1:end-1),dxB_f,'Linewidth', 2);
-legend('Encoder', 'VICON')
+legend('Encoder FL','Encoder FR', 'VICON');
 xlabel('time[s]');ylabel('v_x[m/s]');
 

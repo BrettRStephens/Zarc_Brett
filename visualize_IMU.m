@@ -25,24 +25,10 @@ eulZYX = quat2eul(Q);
 heading = eulZYX(:,1); %Z euler angle (heading) [rad]
 
 % adjust for heading offset, which is negative here
-offset = heading(1);
-heading_offset = heading - offset;
+offset = abs(heading(1));
+heading_offset = heading + offset;
 
-% dxW = zeros(N-1,1);
-% dyW = zeros(N-1,1);
-% dxB = zeros(N-1,1);
-% dyB = zeros(N-1,1);
-yaw = zeros(N-1,1); %yaw [rad/s]
-
-for i=2:N
-    %dxW(i-1) = (x(i) - x(i-1)) / (t(i) - t(i-1));
-    %dyW(i-1) = (y(i) - y(i-1)) / (t(i) - t(i-1));
-    yaw(i-1) = (heading_offset(i) - heading_offset(i-1)) / (t(i) - t(i-1)); %yaw 
-    %R = [cos(eulZ(i)) -sin(eulZ(i)); sin(eulZ(i)) cos(eulZ(i))]; %rotation matrix
-    %temp = R' * [dxW(i-1); dyW(i-1)];
-    %dxB(i-1) = temp(1);
-    %dyB(i-1) = temp(2);
-end
+yaw = w_z; %yaw [rad/s]
 
 d1 = designfilt('lowpassiir','FilterOrder',12, ...
     'HalfPowerFrequency',0.15,'DesignMethod','butter');
@@ -50,8 +36,7 @@ d1 = designfilt('lowpassiir','FilterOrder',12, ...
 %filter the data
 
 heading_f = filtfilt(d1,heading_offset);
-%dxB_f = filtfilt(d1,dxB);
-%dyB_f = filtfilt(d1,dyB);
+
 d2 = designfilt('lowpassiir','FilterOrder',12, ...
     'HalfPowerFrequency',0.05,'DesignMethod','butter');
 yaw_f = filtfilt(d2,yaw);
@@ -63,13 +48,9 @@ subplot(2,1,1)
 plot(t,rad2deg(heading_f),'Linewidth', 2);
 ylabel('heading');
 hold on
-% subplot(3,1,2)
-% plot(t(1:end-1),dxB_f,'Linewidth', 2);
-% hold on
-% plot(t(1:end-1),dyB_f,'Linewidth', 2);
-% legend('V_x', 'V_y')
+
 subplot(2,1,2)
-plot(t(1:end-1), yaw_f);
+plot(t, yaw);
 ylabel('yaw rate');
 hold on
 
