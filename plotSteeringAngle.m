@@ -40,7 +40,8 @@ files = dir(str_folder);
         Q = [qw qx qy qz];
 
         eulerAngles = quat2eul(Q);
-        head = unwrap(eulerAngles(:,1)); %heading angle [rad]
+        %head = unwrap(eulerAngles(:,1)); %heading angle [rad]
+        head = eulerAngles(:,1); %heading angle [rad]
 
         dxW = zeros(N-1,1);
         dyW = zeros(N-1,1);
@@ -89,18 +90,31 @@ files = dir(str_folder);
         v_x_avg_array = v_x_avg*ones(1,length(t(1:end-1)));
         yaw_f_avg = mean(yaw_f(indeces));
         yaw_f_avg_array = yaw_f_avg*ones(1,length(t(1:end-1)));
-
+    %if m == 2 &&  j == 1
         figure();
         subplot(2,1,1);
+        plot(t(1:end-1), dxW);hold on;
         plot(t(1:end-1), dxB_f);hold on;
         plot(t_const,v_x,'LineWidth',2);
         plot(t(1:end-1), v_x_avg_array,'LineWidth',2);
+        xlabel('time(s)','Interpreter','latex','fontsize',16);
+        ylabel('$V_x$','Interpreter','latex','fontsize',16)
+        text(18.5,0.75,'$V_xavg$','Interpreter','latex','fontsize',12);
         
         subplot(2,1,2)
         plot(t(1:end-1), yaw_f);hold on;
         %plot(t_const,yaw_f_in,'LineWidth',2);
         plot(t(1:end-1), yaw_f_avg_array,'LineWidth',2);
-
+        xlabel('time(s)','Interpreter','latex','fontsize',16);
+        ylabel('$\dot{\Psi}$','Interpreter','latex','fontsize',16)
+        text(18.5,0.14,'$\dot{\Psi}avg$','Interpreter','latex','fontsize',12);
+        
+        figure();
+        subplot(2,1,1);
+        plot(t,head);hold on;
+        subplot(2,1,2);
+        plot(t(1:end-1),yaw_f);
+    %end
         %steering angle calc for each file
         Lf = 0.1698;
         Lr = 0.1542;
@@ -128,15 +142,21 @@ pwm_data_y = [pos_pwm,neg_pwm,pwm_90_93];
 
 figure()
 plot(pos_pwm_x,pos_pwm,'b*');hold on;
-plot(neg_pwm_x,neg_pwm,'r*');
-plot(pwm_90_93_x,pwm_90_93,'g*');
-xlabel('uPWM');ylabel('delta');
+plot(neg_pwm_x,neg_pwm,'b*');
+plot(pwm_90_93_x,pwm_90_93,'b*');
+xlabel('$U_{pwm}$','Interpreter','latex','fontsize',16);
+ylabel('$\delta_f$','Interpreter','latex','fontsize',16);
 
 %fit a line to the data
 P = polyfit(pwm_data_x,pwm_data_y,1);
 yfit = P(1)*pwm_data_x+P(2);
-plot(pwm_data_x,yfit,'r-');
-text(90,0.1,strcat('delta = ',num2str(P(1)),' * uPWM',' + ',num2str(P(2))));
+plot(pwm_data_x,yfit,'k-');
+
+text(90,0.1,strcat('$\delta_f$ = ',num2str(P(1)),' $* U_{pwm}$',' + ',...
+    num2str(P(2))),'Interpreter','latex','fontsize',14);
+%title('$\hat{\psi}$','Interpreter','latex')
+
+%title('Steering Angle Mapping','Interpreter','latex','fontsize',18);
 
 
 

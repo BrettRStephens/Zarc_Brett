@@ -1,6 +1,6 @@
 %vextract velocities
 
-str_folder = '/Users/BrettStephens/Documents/Zarc_Brett/VICON Measurements/pwm_90,93/';
+str_folder = '/Users/BrettStephens/Documents/Zarc_Brett/';
 str_file = 'viconExampleOutput_23-11-2017 03:07:06.csv'; %heading ok
 %str_file = 'viconExampleOutput_23-11-2017 02:59:55.csv'; %heading wierd 
 

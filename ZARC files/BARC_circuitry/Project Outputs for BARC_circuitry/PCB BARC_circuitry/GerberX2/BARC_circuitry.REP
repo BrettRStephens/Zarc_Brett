@@ -1,0 +1,197 @@
+*************************************************************
+FileName = BARC_circuitry.GBR
+AutoAperture = True
+*************************************************************
+Generating : Top Layer
+      File : BARC_circuitry_Copper_Signal_Top.gbr
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+*************************************************************
+
+*************************************************************
+Generating : Bottom Layer
+      File : BARC_circuitry_Copper_Signal_Bot.gbr
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+*************************************************************
+
+*************************************************************
+Generating : Bottom Pad Master
+      File : BARC_circuitry_Pads_Bot.gbr
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+*************************************************************
+
+*************************************************************
+Generating : Top Pad Master
+      File : BARC_circuitry_Pads_Top.gbr
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+*************************************************************
+
+*************************************************************
+Generating : Top Overlay
+      File : BARC_circuitry_Legend_Top.gbr
+
+    Adding Layer      : Top Overlay
+
+
+Used DCodes :
+    D17
+    D18
+    D19
+*************************************************************
+
+*************************************************************
+Generating : Top Solder
+      File : BARC_circuitry_Soldermask_Top.gbr
+
+    Adding Layer      : Top Solder
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+*************************************************************
+
+*************************************************************
+Generating : Bottom Paste
+      File : BARC_circuitry_Paste_Bot.gbr
+
+    Adding Layer      : Bottom Paste
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Bottom Overlay
+      File : BARC_circuitry_Legend_Bot.gbr
+
+    Adding Layer      : Bottom Overlay
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Bottom Solder
+      File : BARC_circuitry_Soldermask_Bot.gbr
+
+    Adding Layer      : Bottom Solder
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+*************************************************************
+
+*************************************************************
+Generating : Top Paste
+      File : BARC_circuitry_Paste_Top.gbr
+
+    Adding Layer      : Top Paste
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Mechanical 1
+      File : BARC_circuitry_Mechanical_1.gbr
+
+    Adding Layer      : Mechanical 1
+
+
+Used DCodes :
+    D18
+*************************************************************
+
+*************************************************************
+Generating : Mechanical 16
+      File : BARC_circuitry_Mechanical_16.gbr
+
+    Adding Layer      : Mechanical 16
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Profile
+      File : BARC_circuitry_Profile.gbr
+
+
+Used DCodes :
+    D26
+*************************************************************
+
