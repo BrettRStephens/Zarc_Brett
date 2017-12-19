@@ -89,16 +89,16 @@ for j = 1:length(files)
     t_e = t_s + 8; %8 seconds later, when steering sweep is done
     idx_e = find(t >= t_e,1);
     
-    %sanity check
-    figure()
-    subplot(2,1,1)
-    plot(t(1:end-1), dxB_f);hold on;
-    plot(t(idx_s),dxB_f(idx_s),'r*');
-    plot(t(idx_s:idx_e),dxB_f(idx_s:idx_e),'LineWidth',2)
-    subplot(2,1,2)
-    plot(t(1:end-1), yaw_f);hold on;
-    plot(t(idx_s),yaw_f(idx_s),'r*');
-    plot(t(idx_s:idx_e),yaw_f(idx_s:idx_e),'LineWidth',2)
+%     %sanity check
+%     figure()
+%     subplot(2,1,1)
+%     plot(t(1:end-1), dxB_f);hold on;
+%     plot(t(idx_s),dxB_f(idx_s),'r*');
+%     plot(t(idx_s:idx_e),dxB_f(idx_s:idx_e),'LineWidth',2)
+%     subplot(2,1,2)
+%     plot(t(1:end-1), yaw_f);hold on;
+%     plot(t(idx_s),yaw_f(idx_s),'r*');
+%     plot(t(idx_s:idx_e),yaw_f(idx_s:idx_e),'LineWidth',2)
     
     %clip the data
     t = t(idx_s:idx_e);
@@ -271,20 +271,22 @@ figure()
 %fun = @(alpha)-Fz_f*mu*x_f_p(1)*sin(x_f_p(2)*atan(x_f_p(3)*alpha))
 plot(alpha_f_tot,Fy_f_tot,'b*');hold on;
 
-plot(alpha_f_1, fun_f_t(x_f_t,alpha_f_1),'r','LineWidth',2);
+thesis = plot(alpha_f_1, fun_f_t(x_f_t,alpha_f_1),'r','LineWidth',2);
 plot(alpha_f_2, -mu*Fz_f*sign(alpha_f_2),'r','LineWidth',2);
 
-plot(alpha_f, fun_f_p(x_f_p, alpha_f),'g','LineWidth',2);
+pac = plot(alpha_f, fun_f_p(x_f_p, alpha_f),'g','LineWidth',2);
 xlabel('$\alpha_F$','Interpreter','latex','fontsize',16);
 ylabel('$F_{yF}$','Interpreter','latex','fontsize',16)
+legend([thesis pac],{'Brush Tire','Pacejka'})
 
 figure()
 plot(alpha_r_tot,Fy_r_tot,'b*');hold on;
 
-plot(alpha_r_1, fun_r_t(x_r_t,alpha_r_1),'r','LineWidth',2);
+thesis = plot(alpha_r_1, fun_r_t(x_r_t,alpha_r_1),'r','LineWidth',2);
 plot(alpha_r_2, -mu*Fz_r*sign(alpha_r_2),'r','LineWidth',2);
 
-plot(alpha_r, fun_r_p(x_r_p,alpha_r),'g','LineWidth',2);
+pac = plot(alpha_r, fun_r_p(x_r_p,alpha_r),'g','LineWidth',2);
 xlabel('$\alpha_R$','Interpreter','latex','fontsize',16);
 ylabel('$F_{yR}$','Interpreter','latex','fontsize',16)
+legend([thesis pac],{'Brush Tire','Pacejka'})
 

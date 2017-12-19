@@ -40,8 +40,8 @@ files = dir(str_folder);
         Q = [qw qx qy qz];
 
         eulerAngles = quat2eul(Q);
-        %head = unwrap(eulerAngles(:,1)); %heading angle [rad]
-        head = eulerAngles(:,1); %heading angle [rad]
+        head = unwrap(eulerAngles(:,1)); %heading angle [rad]
+        %head = eulerAngles(:,1); %heading angle [rad]
 
         dxW = zeros(N-1,1);
         dyW = zeros(N-1,1);
@@ -90,31 +90,31 @@ files = dir(str_folder);
         v_x_avg_array = v_x_avg*ones(1,length(t(1:end-1)));
         yaw_f_avg = mean(yaw_f(indeces));
         yaw_f_avg_array = yaw_f_avg*ones(1,length(t(1:end-1)));
-    %if m == 2 &&  j == 1
-        figure();
-        subplot(2,1,1);
-        plot(t(1:end-1), dxW);hold on;
-        plot(t(1:end-1), dxB_f);hold on;
-        plot(t_const,v_x,'LineWidth',2);
-        plot(t(1:end-1), v_x_avg_array,'LineWidth',2);
-        xlabel('time(s)','Interpreter','latex','fontsize',16);
-        ylabel('$V_x$','Interpreter','latex','fontsize',16)
-        text(18.5,0.75,'$V_xavg$','Interpreter','latex','fontsize',12);
-        
-        subplot(2,1,2)
-        plot(t(1:end-1), yaw_f);hold on;
-        %plot(t_const,yaw_f_in,'LineWidth',2);
-        plot(t(1:end-1), yaw_f_avg_array,'LineWidth',2);
-        xlabel('time(s)','Interpreter','latex','fontsize',16);
-        ylabel('$\dot{\Psi}$','Interpreter','latex','fontsize',16)
-        text(18.5,0.14,'$\dot{\Psi}avg$','Interpreter','latex','fontsize',12);
-        
-        figure();
-        subplot(2,1,1);
-        plot(t,head);hold on;
-        subplot(2,1,2);
-        plot(t(1:end-1),yaw_f);
-    %end
+%     %if m == 2 &&  j == 1
+%         figure();
+%         subplot(2,1,1);
+%         plot(t(1:end-1), dxW);hold on;
+%         plot(t(1:end-1), dxB_f);hold on;
+%         plot(t_const,v_x,'LineWidth',2);
+%         plot(t(1:end-1), v_x_avg_array,'LineWidth',2);
+%         xlabel('time(s)','Interpreter','latex','fontsize',16);
+%         ylabel('$V_x$','Interpreter','latex','fontsize',16)
+%         text(18.5,0.75,'$V_xavg$','Interpreter','latex','fontsize',12);
+%         
+%         subplot(2,1,2)
+%         plot(t(1:end-1), yaw_f);hold on;
+%         %plot(t_const,yaw_f_in,'LineWidth',2);
+%         plot(t(1:end-1), yaw_f_avg_array,'LineWidth',2);
+%         xlabel('time(s)','Interpreter','latex','fontsize',16);
+%         ylabel('$\dot{\Psi}$','Interpreter','latex','fontsize',16)
+%         text(18.5,0.14,'$\dot{\Psi}avg$','Interpreter','latex','fontsize',12);
+%         
+%         figure();
+%         subplot(2,1,1);
+%         plot(t,head);hold on;
+%         subplot(2,1,2);
+%         plot(t(1:end-1),yaw_f);
+%     %end
         %steering angle calc for each file
         Lf = 0.1698;
         Lr = 0.1542;
@@ -126,19 +126,20 @@ files = dir(str_folder);
 end
 
 %plot steering angle vs. uPWM
-pos_pwm = delta(1,:);
+pos_pwm = delta(1,:)*180/pi;
 pos_pwm = pos_pwm(pos_pwm~=0);
 pos_pwm_x = [95,100,105,110,115,120];
-neg_pwm = delta(2,:);
+neg_pwm = delta(2,:)*180/pi;
 neg_pwm = neg_pwm(neg_pwm~=0);
 neg_pwm_x = [87,84,81,78,75,72,69,66,63,60];
-pwm_90_93 = delta(3,:);
+pwm_90_93 = delta(3,:)*180/pi;
 pwm_90_93 = pwm_90_93(pwm_90_93~=0);
 pwm_90_93_x = [90,93];
 
 %bring data together
 pwm_data_x = [pos_pwm_x,neg_pwm_x,pwm_90_93_x];
 pwm_data_y = [pos_pwm,neg_pwm,pwm_90_93];
+pwm_data_y_deg = pwm_data_y;
 
 figure()
 plot(pos_pwm_x,pos_pwm,'b*');hold on;
@@ -148,11 +149,11 @@ xlabel('$U_{pwm}$','Interpreter','latex','fontsize',16);
 ylabel('$\delta_f$','Interpreter','latex','fontsize',16);
 
 %fit a line to the data
-P = polyfit(pwm_data_x,pwm_data_y,1);
+P = polyfit(pwm_data_x,pwm_data_y_deg,1);
 yfit = P(1)*pwm_data_x+P(2);
 plot(pwm_data_x,yfit,'k-');
 
-text(90,0.1,strcat('$\delta_f$ = ',num2str(P(1)),' $* U_{pwm}$',' + ',...
+text(90,5,strcat('$\delta_f$ = ',num2str(P(1)),' $* U_{pwm}$',' + ',...
     num2str(P(2))),'Interpreter','latex','fontsize',14);
 %title('$\hat{\psi}$','Interpreter','latex')
 
