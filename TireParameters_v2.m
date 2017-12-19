@@ -12,7 +12,12 @@ L = Lf+Lr; %wheelbase [m]
 m = 2.792; %vehicle mass [kg]
 Fz_f = 12.69414; % [N] measured normal force on front tires
 Fz_r = 14.745411; % [N] measured normal force on rear tires
-
+mu = true;
+if mu == true
+    mu_flag = true;
+    mu = 0.2865; %measured kinetic friction coefficient in Vicon room
+else mu_flag = false;
+end
 %make a vector of steering pwm signals
 folder = dir();
 folder = folder(3:end);
@@ -184,53 +189,85 @@ end
 
 
 %curve fit with thesis
-%x_f = [C_alpha_f,mu_f];
-fun_f_t = @(x_f,alpha_f_tot) ( -x_f(1)*tan(alpha_f_tot) ) + ( ((x_f(1)^2)/(3*x(2)*Fz_f))...
-    * abs(tan(alpha_f_tot)) .* tan(alpha_f_tot) ) - ( ((x_f(1)^3) / (27*(x_f(2)^2)*(Fz_f^2)))...
+if mu_flag == true
+    %x_f = [C_alpha];
+    fun_f_t = @(x_f,alpha_f_tot) ( -x_f(1)*tan(alpha_f_tot) ) + ( ((x_f(1)^2)/(3*mu*Fz_f))...
+    * abs(tan(alpha_f_tot)) .* tan(alpha_f_tot) ) - ( ((x_f(1)^3) / (27*(mu^2)*(Fz_f^2)))...
     * (tan(alpha_f_tot)).^3);
-x0_f_t = [1,1];
-x_f_t = lsqcurvefit(fun_f_t,x0_f_t,alpha_f_tot,Fy_f_tot);
-alpha_sl_f = atan((3*x_f_t(2)*Fz_f)/(x_f_t(1))); 
-
-%x_r = [C_alpha_r,mu_r];
-fun_r_t = @(x_r,alpha_r_tot) ( -x_r(1)*tan(alpha_r_tot) ) + ( ((x_r(1)^2)/(3*x(2)*Fz_r))...
+    x0_f_t = 1;
+    x_f_t = lsqcurvefit(fun_f_t,x0_f_t,alpha_f_tot,Fy_f_tot);
+    alpha_sl_f = atan((3*mu*Fz_f)/(x_f_t));
+    
+    %x_r = [C_alpha]
+    fun_r_t = @(x_r,alpha_r_tot) ( -x_r(1)*tan(alpha_r_tot) ) + ( ((x_r(1)^2)/(3*mu*Fz_r))...
+    * abs(tan(alpha_r_tot)) .* tan(alpha_r_tot) ) - ( ((x_r(1)^3) / (27*(mu^2)*(Fz_r^2)))...
+    * (tan(alpha_r_tot)).^3);
+    x0_r_t = 1;
+    x_r_t = lsqcurvefit(fun_r_t,x0_r_t,alpha_r_tot,Fy_r_tot);
+    alpha_sl_r = atan((3*mu*Fz_r)/(x_r_t));
+    
+else
+    %x_f = [C_alpha_f,mu_f];
+    fun_f_t = @(x_f,alpha_f_tot) ( -x_f(1)*tan(alpha_f_tot) ) + ( ((x_f(1)^2)/(3*x(2)*Fz_f))...
+        * abs(tan(alpha_f_tot)) .* tan(alpha_f_tot) ) - ( ((x_f(1)^3) / (27*(x_f(2)^2)*(Fz_f^2)))...
+        * (tan(alpha_f_tot)).^3);
+    x0_f_t = [1,1];
+    x_f_t = lsqcurvefit(fun_f_t,x0_f_t,alpha_f_tot,Fy_f_tot);
+    alpha_sl_f = atan((3*x_f_t(2)*Fz_f)/(x_f_t(1)));
+    
+    %x_r = [C_alpha_r,mu_r];
+    fun_r_t = @(x_r,alpha_r_tot) ( -x_r(1)*tan(alpha_r_tot) ) + ( ((x_r(1)^2)/(3*x(2)*Fz_r))...
     * abs(tan(alpha_r_tot)) .* tan(alpha_r_tot) ) - ( ((x_r(1)^3) / (27*(x_r(2)^2)*(Fz_r^2)))...
     * (tan(alpha_r_tot)).^3);
-x0_r_t = [1,1];
-x_r_t = lsqcurvefit(fun_r_t,x0_r_t,alpha_r_tot,Fy_r_tot);
-alpha_sl_r = atan((3*x_r_t(2)*Fz_r)/(x_r_t(1))); 
+    x0_r_t = [1,1];
+    x_r_t = lsqcurvefit(fun_r_t,x0_r_t,alpha_r_tot,Fy_r_tot);
+    alpha_sl_r = atan((3*x_r_t(2)*Fz_r)/(x_r_t(1)));
+end
 
 %curve fit with Pacejka
-%x_f = [D,C,B,mu]
-fun_f_p = @(x_f,alpha_f_tot) Fz_f*x_f(4)*x_f(1)*sin(x_f(2)*atan(x_f(3)*alpha_f_tot));
-x0_f_p = [1,1,1,1];
-x_f_p = lsqcurvefit(fun_f_p,x0_f_p,alpha_f_tot,Fy_f_tot);
+if mu_flag == true
+    %x_f = [D,C,B]
+    x0_f_p = [1.2,1.4,10];
+    fun_f_p = @(x_f,alpha_f_tot) -Fz_f*mu*x_f(1)*sin(x_f(2)*atan(x_f(3)*alpha_f_tot));
+    x_f_p = lsqcurvefit(fun_f_p,x0_f_p,alpha_f_tot,Fy_f_tot);
+    
+    %x_r = [D,C,B]
+    fun_r_p = @(x_r,alpha_r_tot) -Fz_r*mu*x_r(1)*sin(x_r(2)*atan(x_r(3)*alpha_r_tot));
+    x0_r_p = [1.2,1.4,10];
+    x_r_p = lsqcurvefit(fun_r_p,x0_r_p,alpha_r_tot,Fy_r_tot);
+else
+    %x_f = [D,C,B,mu]
+    x0_f_p = [1,1,1,1];
+    fun_f_p = @(x_f,alpha_f_tot) -Fz_f*x_f(4)*x_f(1)*sin(x_f(2)*atan(x_f(3)*alpha_f_tot));
+    x_f_p = lsqcurvefit(fun_f_p,x0_f_p,alpha_f_tot,Fy_f_tot);
 
-%x_f = [D,C,B,mu]
-fun_r_p = @(x_r,alpha_r_tot) Fz_r*x_r(4)*x_r(1)*sin(x_r(2)*atan(x_r(3)*alpha_r_tot));
-x0_r_p = [1,1,1,1];
-x_r_p = lsqcurvefit(fun_r_p,x0_r_p,alpha_r_tot,Fy_r_tot);
+    %x_r = [D,C,B,mu]
+    x0_r_p = [1,1,1,1];
+    fun_r_p = @(x_r,alpha_r_tot) -Fz_r*x_r(4)*x_r(1)*sin(x_r(2)*atan(x_r(3)*alpha_r_tot));
+    x_r_p = lsqcurvefit(fun_r_p,x0_r_p,alpha_r_tot,Fy_r_tot);
+end
+
 
 %make a range of alphas
-alpha_f = (0:-0.01:-1);
-alpha_r = (0:-0.01:-1);
-alpha_r_t_1 = (0:-0.01:-alpha_sl_r);
-alpha_r_t_2 = (-alpha_sl_r:-0.01:-1);
-
+alpha_f = (0:-0.01:-0.5);
+alpha_r = (0:-0.01:-0.5);
+% alpha_r_t_1 = (0:-0.01:-alpha_sl_r);
+% alpha_r_t_2 = (-alpha_sl_r:-0.01:-0.5);
 
 %plot results
 figure(1)
+%x_f_p = [1.2,1.4,10];
+%alpha_f  = [0:-0.01:-1];
+%fun = @(alpha)-Fz_f*mu*x_f_p(1)*sin(x_f_p(2)*atan(x_f_p(3)*alpha))
 plot(alpha_f_tot,Fy_f_tot,'b*');hold on;
-% plot(alpha_f, fun_f_t(x_f_t,alpha_f),'r','LineWidth',2);
-plot(alpha_f, fun_f_p(x_f_p,alpha_f),'g','LineWidth',2);
-%plot(alpha_f_f,flat_f,'r','LineWidth',2);
+plot(alpha_f, fun_f_t(x_f_t,alpha_f),'r','LineWidth',2);
+plot(alpha_f, fun_f_p(x_f_p, alpha_f),'g','LineWidth',2);
 xlabel('$\alpha_F$','Interpreter','latex','fontsize',16);
 ylabel('$F_{yF}$','Interpreter','latex','fontsize',16)
 
 figure(2)
 plot(alpha_r_tot,Fy_r_tot,'b*');hold on;
-% plot(alpha_r_t_1, fun_r_t(x_r_t,alpha_r_t_1),'r','LineWidth',2);
-% plot(alpha_r_t_2, -x_r_t(2)*Fz_r*sign(alpha_r_t_2),'r','LineWidth',2);
+plot(alpha_r, fun_r_t(x_r_t,alpha_r),'r','LineWidth',2);
 plot(alpha_r, fun_r_p(x_r_p,alpha_r),'g','LineWidth',2);
 xlabel('$\alpha_R$','Interpreter','latex','fontsize',16);
 ylabel('$F_{yR}$','Interpreter','latex','fontsize',16)
